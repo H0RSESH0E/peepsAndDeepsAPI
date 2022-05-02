@@ -22,7 +22,7 @@ const userController = {
     },
 
     getUserById(req, res) {
-        User.findOne({ _id: req.params.id })
+        User.findOne({ _id: req.params.userId })
             .populate({
                 path: 'thoughts',
                 select: '-__v'
@@ -50,7 +50,7 @@ const userController = {
     },
 
     updateUser(req, res) {
-        User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, runValidators: true })
+        User.findOneAndUpdate({ _id: req.params.userId }, req.body, { new: true, runValidators: true })
             .then(peepsDbData => {
                 if (!peepsDbData) {
                     res.status(404).json({ message: 'No user with that id can be found' });
@@ -65,7 +65,7 @@ const userController = {
     },
 
     deleteUser(req, res) {
-        User.findOneAndDelete({ _id: req.params.id })
+        User.findOneAndDelete({ _id: req.params.userId })
             .then(peepsDbData => res.json(peepsDbData))
             .catch(err => {
                 console.log(err);
@@ -76,7 +76,7 @@ const userController = {
     addFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
-            { $push: { friends: req.body } },
+            { $push: { friends: req.params.friendId} },
             { new: true }
         )
             .then(peepsDbData => {
