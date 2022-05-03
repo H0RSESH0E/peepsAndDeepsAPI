@@ -10,9 +10,15 @@
 ## Description  
 This application uses Express.js and MongoDB (and the Mongoose ODM) to manage the backend of a social media site.  It tracks users, their friends, thoughts and reactions to those thoughts.  Please follow the link below the screenshot for a demonstration of the applications functionality.  
 &nbsp;  
-<img src="./assets/images/screenshot.png" alt="Peeps & Deeps application screenshot" width="600"/>    
+<img src="./client/assets/images/screenshot.png" alt="Peeps & Deeps application screenshot" width="600"/>    
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white)   
 &nbsp;  
+[Application Demonstration Video 1](https://drive.google.com/file/d/1LBFeZ8eAsp4_17Wrg8hmtjUZLGdfSOcX/view)  
+&nbsp;  
+[Application Demonstration Video 2](https://drive.google.com/file/d/1wJtL0aRlptKsP4zkrQItjqBDu0KwJ8w7/view)
+
+&nbsp;  
+
 ## Installation
 After downloading and installing MongoDB, download all necessary npm packages 'npm i' and then laucnch the server with 'node server.js'  
 &nbsp;  
