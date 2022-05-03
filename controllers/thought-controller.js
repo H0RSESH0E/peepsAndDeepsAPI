@@ -32,20 +32,26 @@ const thoughtController = {
     },
 
     createThought(req, res) {
-        Thought.create(req.body)
-            .then(deepsDbData => {
-                return User.findOneAndUpdate(
-                    { _id: req.params.userId },
-                    { $push: { thoughts: deepsDbData._id } },
-                    { new: true }
-                );
-            })
-            .then(deepsDbData => {
-                if (!deepsDbData) {
-                    res.status(404).json({ message: 'No user with that id can be found' });
-                    return;
-                }
-                res.json(deepsDbData)
+        User.findOne({ _id: req.params.userId })
+            .then(peepsDbData => {
+                Thought.create({
+                    thoughtText: req.body.thoughtText,
+                    username: peepsDbData.username
+                })
+                    .then(deepsDbData => {
+                        return User.findOneAndUpdate(
+                            { _id: req.params.userId },
+                            { $push: { thoughts: deepsDbData._id } },
+                            { new: true }
+                        );
+                    })
+                    .then(deepsDbData => {
+                        if (!deepsDbData) {
+                            res.status(404).json({ message: 'No user with that id can be found' });
+                            return;
+                        }
+                        res.json(deepsDbData)
+                    })
             })
             .catch(err => {
                 console.log(err);
@@ -72,7 +78,7 @@ const thoughtController = {
             });
     },
     deleteThought(req, res) {
-        Thought.delete({ _id: req.params.thoughtId })
+        Thought.findOneAndDelete({ _id: req.params.thoughtId })
             .then(deepsDbData => res.json(deepsDbData))
             .catch(err => {
                 console.log(err);
@@ -82,27 +88,40 @@ const thoughtController = {
     },
 
     addReaction(req, res) {
-        Thought.findOneAndUpdate(
-            { _id: req.params.thoughtId },
-            { $push: { reactions: req.body } },
-            { new: true, runValidators: true }
-        )
-            .then(deepsDbData => {
-                if (!deepsDbData) {
-                    res.status(404).json({ message: 'No thought with that id can be found' });
-                    return;
-                }
-                res.json(deepsDbData);
+        User.findOne({ _id: req.body.userId })
+            .then(peepsDbData => {
+                console.log('%%%%%%%%%%---%%%%%%%%%%', peepsDbData);
+                Thought.findOneAndUpdate(
+                    { _id: req.params.thoughtId },
+                    {
+                        $push: {
+                            reactions: {
+                                reactionBody: req.body.reactionBody,
+                                username: peepsDbData.username
+                            }
+                        }
+                    },
+                    { new: true, runValidators: true }
+                )
+                    .then(deepsDbData => {
+                        if (!deepsDbData) {
+                            res.status(404).json({ message: 'No thought with that id can be found' });
+                            return;
+                        }
+                        res.json(deepsDbData);
+                    })
+
             })
             .catch(err => {
                 console.log(err);
                 res.sendStatus(400).send('Error: 400 Bad Request');
             });
     },
+
     removeReaction(req, res) {
         Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
-            { $pull: { reactions: { reactionId: req.params.reactionId } } },
+            { $pull: { reactions: { reactionId: req.body.reactionId } } },
             { new: true, runValidators: true }
         )
             .then(deepsDbData => {
@@ -114,7 +133,7 @@ const thoughtController = {
             })
             .catch(err => {
                 console.log(err);
-                res.sendStatus(400).send('Error: 400 Bad Request');
+                res.sendStatus(404).send('Error: 400 Bad Request');
             });
 
     }
